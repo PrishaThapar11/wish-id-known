@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    match /tips/{id} {
+      // Anyone may read tips that have been approved or are labelled sample data.
+      allow read: if resource.data.status in ['approved', 'sample'];
+      // Signed-in (anonymous) users may submit a pending tip. No uid is stored on the tip.
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['topic','kind','claim','detail','when','status','createdAt'])
+        && request.resource.data.status == 'pending'
+        && request.resource.data.claim is string && request.resource.data.claim.size() <= 220
+        && request.resource.data.detail is string && request.resource.data.detail.size() <= 700
+        && request.resource.data.topic in ['hostel','academics','professors','paperwork','placements','campus']
+        && request.resource.data.kind in ['process','pattern','warning','opinion']
+        && request.resource.data.when in ['recent','last_year','older']
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+    match /official/{id} { allow read: if true; allow write: if false; }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "wish-id-known",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": { "dev": "vite", "build": "vite build", "test": "node src/shield.test.js" },
+  "dependencies": { "firebase": "latest" },
+  "devDependencies": { "vite": "^6.0.0" }
+}
