@@ -29,7 +29,7 @@ export function ground(raw, tips, official) {
     handbook: String(c.official_says || '').trim(), students: String(c.students_say || '').trim(),
     oids: ids(c.official_ids, O), sids: ids(c.student_ids, T),
   })).filter((c) => c.handbook && c.students && c.oids.length && c.sids.length >= REPEAT_MIN);
-  const gaps = (raw.gaps || []).map(String).filter(Boolean).slice(0, 4);
+    const gaps = (raw.gaps || []).map(String).map((g) => g.trim()).filter((g) => g.includes(' ') && g.length > 15).slice(0, 4);
   const any = off.length || repeated.length || single.length || conflicts.length;
   const verdict = !any ? 'unknown' : raw.verdict === 'answered' && (off.length || repeated.length) ? 'answered' : 'partial';
   return { verdict, summary: String(raw.summary || '').trim(), official: off, repeated, single, conflicts, gaps };
