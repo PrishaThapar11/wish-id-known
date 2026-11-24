@@ -81,7 +81,8 @@ export async function ask(question) {
   });
   const prompt = `${RULES}\n\nSOURCES:\n${[...official, ...tips].map(line).join('\n')}\n\nQUESTION: ${clean}`;
   const res = await generate(model, prompt);
-  const source = /device/i.test(String(res.response.inferenceSource || (navigator.onLine ? 'cloud' : 'device'))) ? 'device' : 'cloud';
+  console.info('inferenceSource reported by SDK:', res.response.inferenceSource, '| online:', navigator.onLine);
+  const source = !navigator.onLine || /device/i.test(String(res.response.inferenceSource || '')) ? 'device' : 'cloud';
   const txt = res.response.text();
   const raw = JSON.parse(txt.match(/\{[\s\S]*\}/)[0]);
   return { r: ground(raw, tips, official), map, sent: { tips: tips.length, official: official.length }, source, prompt };

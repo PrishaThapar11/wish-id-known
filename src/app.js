@@ -1,5 +1,6 @@
 import { SHELF, OFFICIAL } from './seed.js';
 import { allTips, refreshPool } from './pool.js';
+import { myTips, deleteTip } from './firebase.js';
 
 const $ = (s) => document.querySelector(s);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
@@ -57,7 +58,25 @@ function browse() {
   const tips = allTips().filter((t) => (shelf === 'all' || t.topic === shelf) && (w === 'all' || t.when === w));
   fill($('#blist'), [...off, ...tips], 'Nothing here yet. Be the first to add a tip.');
 }
+async function mine() {
+  const box = $('#mine'); box.replaceChildren(el('p', 'small', 'Loading…'));
+  try {
+    const list = await myTips(); box.replaceChildren();
+    if (!list.length) return box.append(el('p', 'small', 'Nothing yet. Tips you add from this browser show up here.'));
+    list.forEach((d) => {
+      const c = card({ id: 'C' + d.id, topic: d.topic, shelf: SHELF[d.topic], kind: d.kind, when: d.when, text: `${d.claim} ${d.detail}`.trim(), origin: 'community' });
+      const b = el('button', 'quiet sm', 'Delete this tip');
+      b.onclick = async () => {
+        if (!confirm('Delete this tip for everyone?')) return;
+        b.disabled = true;
+        try { await deleteTip(d.id); await refreshPool(); mine(); } catch (e) { console.error(e); b.disabled = false; b.textContent = 'Couldn’t delete (see console)'; }
+      };
+      c.append(b); box.append(c);
+    });
+  } catch (e) { console.warn(e); box.replaceChildren(el('p', 'small', 'Couldn’t load your tips right now.')); }
+}
 function savedView() {
+  mine();
   const s = saved();
   fill($('#slist'), allTips().filter((t) => s.includes(t.id)), 'Nothing saved yet. Use Save on any tip in Browse.');
 }

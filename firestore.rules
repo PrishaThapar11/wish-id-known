@@ -14,7 +14,18 @@ service cloud.firestore {
         && request.resource.data.kind in ['process','pattern','warning','opinion']
         && request.resource.data.when in ['recent','last_year','older']
         && request.resource.data.createdAt == request.time;
-      allow update, delete: if false;
+      allow update: if false;
+      // Only the anonymous account that created a tip can delete it (link kept in /tipOwners, not on the tip).
+      allow delete: if request.auth != null
+        && get(/databases/$(db)/documents/tipOwners/$(id)).data.uid == request.auth.uid;
+    }
+    match /tipOwners/{id} {
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['uid'])
+        && request.resource.data.uid == request.auth.uid
+        && exists(/databases/$(db)/documents/tips/$(id));
+      allow read, delete: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow update: if false;
     }
     match /official/{id} { allow read: if true; allow write: if false; }
   }

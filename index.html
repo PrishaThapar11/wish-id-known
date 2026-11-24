@@ -128,13 +128,14 @@
 
   <section id="done" class="sheet" hidden>
     <h2>Thanks, it’s live</h2>
-    <p class="lede">It now appears as a community tip, marked unreviewed so nobody mistakes it for a handbook rule. Nothing carries your name or account id.</p>
+    <p class="lede">It now appears as a community tip, marked unreviewed so nobody mistakes it for a handbook rule. The tip itself carries no name or account id. You can delete it from the Saved page.</p>
     <button id="again" class="primary">Add another</button>
   </section>
 
 </div>
 <div data-view="saved" hidden>
   <section class="sheet"><h2>Saved</h2><p class="lede">Tips you’ve saved, kept in this browser only.</p><div id="slist" class="list"></div></section>
+  <section class="sheet"><h2>Your tips</h2><p class="lede">Tips you added from this browser. Only you can delete them. The tip itself carries no account id: a separate private record links it to your anonymous account, and clearing site data or switching browsers means you can no longer delete it.</p><div id="mine" class="list"></div></section>
 </div>
 <div data-view="how" hidden>
   <section class="sheet how">
@@ -144,7 +145,7 @@
     <h3>Asking</h3>
     <p>Your question and the closest tips go to Gemini through Firebase AI Logic, preferring the cloud. If you’re offline, the same question runs on your device instead, and the answer says which one it was. Every claim has to point at a source or it is dropped. “Heard from several students” needs at least three tips, and a lone story is always labelled as one.</p>
     <h3>What’s real</h3>
-    <p>Halden University is fictional. Handbook entries and tips marked “Sample” are invented for the demo. Tips added through this site appear as “Community tip, unreviewed”. Anonymous sign-in is used only so the database can require a signed-in client. Tips don’t store it.</p>
+    <p>Halden University is fictional. Handbook entries and tips marked “Sample” are invented for the demo. Tips added through this site appear as “Community tip, unreviewed”. Anonymous sign-in lets you delete your own tips later. The tip itself doesn’t carry your account id. A separate private record links the two, and only that same anonymous account can read or delete it.</p>
   </section>
 </div>
 </main>
