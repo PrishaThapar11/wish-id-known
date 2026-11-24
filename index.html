@@ -7,25 +7,63 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2324414d'/%3E%3Ccircle cx='16' cy='9' r='4' fill='%23b3261e'/%3E%3Crect x='7' y='14' width='18' height='12' fill='%23fbfaf6'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Literata:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Caveat:wght@500&family=Literata:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/src/styles.css">
 </head>
 <body>
 <header class="top">
-  <h1>Wish I’d Known</h1>
-  <p>Halden University. The things nobody told you, written down by the people who found out the hard way.</p>
+  <a class="logo" href="#home">Wish I’d Known</a><span class="uni">Halden University</span>
+  <nav id="nav">
+    <a href="#home" data-nav="home">Home</a><a href="#ask" data-nav="ask">Ask</a><a href="#browse" data-nav="browse">Browse</a>
+    <a href="#add" data-nav="add">Add a tip</a><a href="#saved" data-nav="saved">Saved</a><a href="#how" data-nav="how">How it works</a>
+  </nav>
 </header>
-
 <main>
+<div data-view="home">
+  <section class="hero">
+    <h1>The things nobody told you.</h1>
+    <p>Written down by the students who found out the hard way. Every answer shows what the handbook says, what students report, and what nobody knows yet.</p>
+    <form id="hform" class="hsearch"><input id="hq" maxlength="200" aria-label="Your question" placeholder="Ask anything, e.g. What happens if I withdraw from placements?"><button class="primary">Ask</button></form>
+  </section>
   <section class="shelves" aria-label="Topics">
-    <a class="slip s1" href="#contribute"><b>Hostel and mess</b><span>Blocks, rooms, what to bring, what the warden will actually stop you for</span></a>
-    <a class="slip s2" href="#contribute"><b>Exams and academics</b><span>How papers really go, experiential learning, attendance</span></a>
-    <a class="slip s3" href="#contribute"><b>Courses and FFCS</b><span>Slot strategy, workload, how assessments are split</span></a>
-    <a class="slip s4" href="#contribute"><b>Paperwork</b><span>Which form, which office, in which order</span></a>
-    <a class="slip s5" href="#contribute"><b>Placements</b><span>Withdrawal, documents, deadlines</span></a>
-    <a class="slip s6" href="#contribute"><b>Rules nobody printed</b><span>Dress code, facilities, curfews</span></a>
+    <button class="slip s1" data-shelf="hostel"><b>Hostel and mess</b><span>Blocks, rooms, what to bring, what the warden will actually stop you for</span></button>
+    <button class="slip s2" data-shelf="academics"><b>Exams and academics</b><span>How papers really go, experiential learning, attendance</span></button>
+    <button class="slip s3" data-shelf="professors"><b>Courses and FFCS</b><span>Slot strategy, workload, how assessments are split</span></button>
+    <button class="slip s4" data-shelf="paperwork"><b>Paperwork</b><span>Which form, which office, in which order</span></button>
+    <button class="slip s5" data-shelf="placements"><b>Placements</b><span>Withdrawal, documents, deadlines</span></button>
+    <button class="slip s6" data-shelf="campus"><b>Rules nobody printed</b><span>Dress code, facilities, curfews</span></button>
+  </section>
+  <section class="sheet"><h2>Worth knowing</h2><p class="small">A few tips, picked fresh each visit.</p><div id="worth" class="list"></div></section>
+  <section class="sheet"><h2>Still unanswered</h2><p class="lede">Questions students keep asking that nobody has answered reliably. If you’ve been through one, you can fill the gap.</p><div id="unans" class="list"></div></section>
+</div>
+<div data-view="ask" hidden>
+  <section id="ask" class="sheet">
+    <h2>Ask what the handbook doesn’t say</h2>
+    <p class="lede">Answers are built only from handbook entries and student tips, sorted by how far each can be trusted. If nobody has written it down, you’ll be told that instead of a guess.</p>
+    <label for="q">Your question</label>
+    <input id="q" maxlength="200" placeholder="e.g. Are there rules about what I can wear in the university?">
+    <div class="row">
+      <button id="askBtn" class="primary">Look it up</button>
+      <button class="quiet eg" type="button" data-q="Are there rules about what I can wear in the university?">Dress code</button>
+      <button class="quiet eg" type="button" data-q="What happens if I don't complete experiential learning?">Skipping EL</button>
+      <button class="quiet eg" type="button" data-q="How do I change from hosteller to day scholar?">Day scholar</button>
+    </div>
+    <p id="askErr" class="err" hidden></p>
+    <div id="answer" hidden></div>
   </section>
 
+  
+</div>
+<div data-view="browse" hidden>
+  <section class="sheet">
+    <h2>Browse</h2>
+    <div id="tabs" class="tabs"></div>
+    <label for="fWhenF">Show tips from</label>
+    <select id="fWhenF"><option value="all">Any time</option><option value="recent">This year</option><option value="last_year">Last year</option><option value="older">Earlier</option></select>
+  </section>
+  <div id="blist" class="list"></div>
+</div>
+<div data-view="add" hidden>
   <section id="contribute" class="sheet">
     <h2>Add what you know</h2>
     <p class="lede">Write it the way you'd tell a junior. Your story is read and cleaned <em>in this browser</em>. You check the short version before anything is shared, and the original is never uploaded.</p>
@@ -89,12 +127,28 @@
   </section>
 
   <section id="done" class="sheet" hidden>
-    <h2>Thanks, it's in the queue</h2>
-    <p class="lede">Tips are reviewed before they show up for other students. Nothing appears under your name because nothing carries one.</p>
+    <h2>Thanks, it’s live</h2>
+    <p class="lede">It now appears as a community tip, marked unreviewed so nobody mistakes it for a handbook rule. Nothing carries your name or account id.</p>
     <button id="again" class="primary">Add another</button>
   </section>
+
+</div>
+<div data-view="saved" hidden>
+  <section class="sheet"><h2>Saved</h2><p class="lede">Tips you’ve saved, kept in this browser only.</p><div id="slist" class="list"></div></section>
+</div>
+<div data-view="how" hidden>
+  <section class="sheet how">
+    <h2>How it works</h2>
+    <h3>Adding a tip</h3>
+    <p>Your story is read by Gemini Nano, the small model built into Chrome, on your own device. That step is set to on-device only, so if Nano isn’t available it will not quietly send your text to the cloud. Fixed rules remove names, phone numbers, emails and roll numbers before and after the model. You edit and approve a short tip, and only that tip is stored, with no account id.</p>
+    <h3>Asking</h3>
+    <p>Your question and the closest tips go to Gemini through Firebase AI Logic, preferring the cloud. If you’re offline, the same question runs on your device instead, and the answer says which one it was. Every claim has to point at a source or it is dropped. “Heard from several students” needs at least three tips, and a lone story is always labelled as one.</p>
+    <h3>What’s real</h3>
+    <p>Halden University is fictional. Handbook entries and tips marked “Sample” are invented for the demo. Tips added through this site appear as “Community tip, unreviewed”. Anonymous sign-in is used only so the database can require a signed-in client. Tips don’t store it.</p>
+  </section>
+</div>
 </main>
-<footer>Sample project. Halden University is fictional. Tips shown in demos are labelled as sample data.</footer>
+<footer>Sample project for #BuildHybridAI 2026. Halden University is fictional. Sample tips are labelled as sample data.</footer>
 <script type="module" src="/src/main.js"></script>
 </body>
 </html>

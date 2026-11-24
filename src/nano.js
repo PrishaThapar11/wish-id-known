@@ -1,4 +1,4 @@
-import { getGenerativeModel, InferenceMode, Schema } from 'firebase/ai';
+import { getGenerativeModel, InferenceMode } from 'firebase/ai';
 import { ai } from './firebase.js';
 
 const TOPICS = ['hostel', 'academics', 'professors', 'paperwork', 'placements', 'campus'];
@@ -18,7 +18,7 @@ Rules:
 - Never include the name of any person. Use roles: a warden, a professor, a clerk.
 - Do not judge anyone's character or competence. State what happened or how the process works.
 - Do not invent facts that are not in the story.
-- claim: one sentence, at most 25 words.
+- claim: one specific sentence, at most 25 words. Name the concrete step, document, office, deadline or number from the story. Never write generic advice like "be proactive" or "gather documents".
 - detail: 1 to 3 sentences with specifics (forms, order of steps, timing, where to go).
 - topic: ${TOPICS.join(' | ')} (professors = courses, FFCS, workload, assessment format only)
 - kind: process (how something works) | pattern (how it usually goes) | warning (what goes wrong) | opinion (personal view)

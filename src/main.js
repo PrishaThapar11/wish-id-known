@@ -1,6 +1,8 @@
 import { mask } from './shield.js';
 import { nanoStatus, extractTip } from './nano.js';
 import { saveTip } from './firebase.js';
+import { refreshPool } from './pool.js';
+import './app.js';
 
 const $ = (s) => document.querySelector(s);
 const show = (id, on = true) => { $(id).hidden = !on; };
@@ -65,6 +67,7 @@ $('#share').onclick = async () => {
   const b = $('#share'); b.disabled = true; b.textContent = 'Sharing…';
   try {
     await saveTip(p);
+    refreshPool();
     $('#raw').value = '';
     show('#review', false); show('#done'); $('#done').scrollIntoView({ behavior: 'smooth' });
   } catch (e) {
@@ -72,5 +75,29 @@ $('#share').onclick = async () => {
     say('#err2', `Could not share it (${e.code || e.message}). Check that Firestore is created, Anonymous sign-in is on, and the rules are published.`);
   } finally { b.disabled = false; b.textContent = 'Share this tip'; }
 };
-$('#cancel').onclick = () => { show('#review', false); $('#contribute').scrollIntoView(); };
-$('#again').onclick = () => { show('#done', false); $('#contribute').scrollIntoView(); };
+$('#cancel').onclick = () => { show('#review', false); window.scrollTo(0, 0); };
+$('#again').onclick = () => { show('#done', false); window.scrollTo(0, 0); };
+
+// ---- Ask ----
+import { ask } from './ask.js';
+import { renderAnswer } from './render.js';
+const goAdd = () => { location.hash = '#add'; };
+const setQ = (q) => { $('#q').value = q; };
+document.querySelectorAll('[data-q]').forEach((b) => b.addEventListener('click', () => {
+  setQ(b.dataset.q);
+  if (b.classList.contains('eg')) $('#askBtn').click();
+}));
+async function runAsk() {
+  say('#askErr', '');
+  const q = $('#q').value.trim();
+  if (q.length < 8) return say('#askErr', 'Type a fuller question, at least a few words.');
+  const b = $('#askBtn'); b.disabled = true; b.textContent = 'Looking…';
+  try {
+    renderAnswer($('#answer'), await ask(q), goAdd);
+  } catch (e) {
+    console.error(e);
+    say('#askErr', navigator.onLine ? `Couldn’t get an answer (${e.code || e.message}).` : 'Asking needs a connection. Adding a tip still works offline.');
+  } finally { b.disabled = false; b.textContent = 'Look it up'; }
+}
+$('#askBtn').onclick = runAsk;
+$('#q').addEventListener('keydown', (e) => { if (e.key === 'Enter') runAsk(); });

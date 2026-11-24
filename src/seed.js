@@ -1,0 +1,43 @@
+// SAMPLE DATA for the fictional Halden University. Composite, invented situations. Never shown as real student counts.
+export const SHELF = { hostel: 'Hostel and mess', academics: 'Exams and academics', professors: 'Courses and FFCS', paperwork: 'Paperwork', placements: 'Placements', campus: 'Rules nobody printed' };
+const t = ([id, topic, kind, when, text]) => ({ id, topic, shelf: SHELF[topic], kind, when, text });
+const o = ([id, topic, title, text]) => ({ id, topic, shelf: SHELF[topic], title, text });
+
+export const OFFICIAL = [
+  ['O1', 'hostel', 'Hostel rules, section 4', 'Residents must wear decent attire in common areas and the mess.'],
+  ['O2', 'academics', 'Experiential Learning policy', 'Experiential learning (EL) is a credit requirement. Students must complete the stipulated EL components before the end of the programme; marks are awarded by the course faculty.'],
+  ['O3', 'academics', 'Attendance regulation', 'A minimum of 75% attendance is required to sit the end-term exam. Shortage can be condoned only with approved medical documents.'],
+  ['O4', 'placements', 'Placement policy', 'A selected student may not sit for further companies. Withdrawing after accepting an offer needs written approval from the Placement Cell.'],
+  ['O5', 'paperwork', 'Certificates', 'Bonafide and no-dues certificates are issued by the Administrative Office on written application.'],
+  ['O6', 'academics', 'Assessment structure', 'Each course has two continuous assessment tests and a final exam. Weightage is set by the course faculty at the start of the semester.'],
+].map(o);
+
+export const TIPS = [
+  ['T1', 'hostel', 'warning', 'recent', 'The warden turned us back at the mess for wearing shorts above the knee. The handbook never mentions length.'],
+  ['T2', 'hostel', 'pattern', 'recent', 'If you wear sleeveless tops or ripped jeans, expect to be stopped at the block entrance in the evening.'],
+  ['T3', 'hostel', 'pattern', 'last_year', 'Kurta and track pants are always fine to wear. Anything you would hesitate to wear to a family function will be questioned.'],
+  ['T4', 'hostel', 'warning', 'recent', 'I got a verbal warning for wearing a sleeveless hoodie in the common room. Nothing in writing, just told off.'],
+  ['T5', 'hostel', 'opinion', 'last_year', 'I wear normal tees and shorts and never had an issue in my block. Depends on which warden is on duty.'],
+  ['T6', 'hostel', 'pattern', 'recent', 'Blocks near the mess are convenient but noisy until late. Farther blocks are quieter, and most people want quiet by second year.'],
+  ['T7', 'hostel', 'pattern', 'recent', 'The north mess has more variety on weekends. The south mess is quicker on weekdays and runs out of food less often.'],
+  ['T8', 'hostel', 'process', 'last_year', 'What to bring: extension board, bucket and mug, a lock for the cupboard, a mattress cover. Heaters and kettles are not allowed.'],
+  ['T9', 'hostel', 'warning', 'recent', 'Room checks happen without notice. Induction cookers and kettles get confiscated and are returned only at the end of the year.'],
+  ['T11', 'academics', 'process', 'recent', 'Experiential learning (EL) components are announced late. Check the course page in the first month, because nobody gives you the list.'],
+  ['T12', 'academics', 'warning', 'last_year', 'I missed an experiential learning (EL) submission and the grade stayed incomplete until I did a replacement project next semester.'],
+  ['T13', 'academics', 'pattern', 'recent', 'If you skip experiential learning the course shows as incomplete, not failed, but it can block you from registering the next-level course.'],
+  ['T14', 'academics', 'process', 'recent', 'For experiential learning, faculty coordinators can give a short extension if you ask before the deadline. After it, they usually cannot.'],
+  ['T16', 'academics', 'pattern', 'recent', 'CAT and final exam papers reuse questions from the last two years with the numbers changed. Seniors keep a shared drive of them.'],
+  ['T18', 'academics', 'pattern', 'recent', 'Attendance shortage only gets noticed near the end of the semester, so track your own percentage.'],
+  ['T19', 'academics', 'warning', 'older', 'Attendance condonation needed a medical certificate stamped by the campus clinic. Outside certificates were rejected.'],
+  ['T20', 'professors', 'pattern', 'recent', 'Courses with continuous project work feel lighter at exam time but need steady effort every week.'],
+  ['T21', 'professors', 'pattern', 'recent', 'Morning theory slots often clash with labs. Check the lab slot pairing before locking a theory slot in FFCS.'],
+  ['T22', 'professors', 'process', 'last_year', 'FFCS opens in batches and first choices fill in seconds, so keep a backup list of three courses ready.'],
+  ['T23', 'professors', 'pattern', 'recent', 'The assessment split changes between faculty teaching the same course. Ask for last semester’s breakdown, not just the course code.'],
+  ['T24', 'placements', 'warning', 'last_year', 'When I withdrew after accepting an offer, the Placement Cell asked for a written explanation and informed the company. Expect a meeting.'],
+  ['T25', 'placements', 'pattern', 'recent', 'People who withdrew were told they might be barred from further drives that season.'],
+  ['T26', 'placements', 'process', 'recent', 'Keep digital copies of your offer letter, marksheets and ID proofs ready. The cell asks for the same set repeatedly.'],
+  ['T27', 'paperwork', 'process', 'recent', 'A bonafide certificate takes about two days if you apply before noon. The office will not take the form without this semester’s fee receipt.'],
+  ['T28', 'paperwork', 'pattern', 'recent', 'Offices often send you to another office first. Ask what exactly they need from you and get it in writing before you leave.'],
+  ['T29', 'campus', 'pattern', 'recent', 'The gate closes at 9:30pm for first years. Late entry is logged.'],
+  ['T30', 'campus', 'pattern', 'last_year', 'After three late entries in the register, a mail goes to your parents.'],
+].map(t);

@@ -1,0 +1,13 @@
+import assert from 'node:assert';
+import { rank, ground } from './retrieve.js';
+const ids = (q) => { const r = rank(q); return [...r.official, ...r.tips].map((x) => x.id); };
+const dress = ids('Are there rules about what I can wear in the university?');
+assert(['O1', 'T1', 'T2', 'T3', 'T4'].every((i) => dress.includes(i)), dress.join());
+const el = ids("What happens if I don't complete experiential learning?");
+assert(['O2', 'T12', 'T13'].every((i) => el.includes(i)), el.join());
+assert(ids('How do I change from hosteller to day scholar?').length === 0, 'day scholar must match nothing');
+assert(ids('What happens if I withdraw from placements after an offer?').includes('O4'));
+const r = rank('Are there rules about what I can wear in the university?');
+const g = ground({ verdict: 'answered', summary: 's', official: [{ text: 'x', ids: ['O1', 'ZZ'] }], repeated: [{ text: 'a', ids: ['T1', 'T2', 'T3'] }, { text: 'b', ids: ['T1', 'T2'] }, { text: 'c', ids: ['NOPE'] }], single: [], conflicts: [{ official_says: 'h', students_say: 's', official_ids: ['O1'], student_ids: ['T1', 'T2'] }], gaps: [] }, r.tips, r.official);
+assert(g.repeated.length === 1 && g.single.length === 1 && g.conflicts.length === 0 && g.official[0].ids.length === 1);
+console.log('retrieve ok');
