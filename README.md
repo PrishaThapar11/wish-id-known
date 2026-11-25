@@ -3,8 +3,8 @@
 **The things nobody told you, written down by the students who found out the hard way.**
 A student-built knowledge base for a fictional university (Halden). Every answer shows what the handbook says, what students report, and what nobody knows yet. Built for #BuildHybridAI 2026 with Firebase AI Logic.
 
-- Live app: _add your Firebase Hosting URL_
-- Demo video: _add your YouTube link_
+- Live app: [Live](https://wishidknown.web.app)
+- Demo video:
 
 ## The problem
 Universities have an official rulebook and an unofficial one. Which hostel block is better, what the warden actually stops you for, what happens if you skip experiential learning, how to switch from hosteller to day scholar: none of it is written down, and even seniors disagree. Students who want to share what they learned have good reasons not to put their raw story, names and details into a shared system.
