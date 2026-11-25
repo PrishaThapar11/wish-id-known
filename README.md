@@ -3,7 +3,7 @@
 **The things nobody told you, written down by the students who found out the hard way.**
 A student-built knowledge base for a fictional university (Halden). Every answer shows what the handbook says, what students report, and what nobody knows yet. Built for #BuildHybridAI 2026 with Firebase AI Logic.
 
-- Live app: _add your Firebase Hosting URL_
+- Live app: [https://wishidknown.web.app](https://wishidknown.web.app)
 - Demo video: _add your YouTube link_
 
 ## The problem
