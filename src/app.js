@@ -13,6 +13,7 @@ let shelf = 'all';
 
 function card(t) {
   const c = el('article', 'tipcard' + (t.title ? ' off' : ''));
+  if (t.topic) c.dataset.topic = t.topic;
   const meta = el('p', 'tmeta');
   meta.append(el('span', 'badge ' + (t.title ? 'b-off' : t.origin === 'community' ? 'b-com' : 'b-sam'), t.title ? 'Handbook (sample)' : t.origin === 'community' ? 'Community tip, unreviewed' : 'Sample tip'));
   if (!t.title) meta.append(el('span', null, KIND[t.kind]), el('span', null, WHEN[t.when]));
@@ -33,6 +34,8 @@ const fill = (box, list, empty) => { box.replaceChildren(...(list.length ? list.
 const UNANS = ['How do I change from hosteller to day scholar?', 'How does hostel leave approval work?', 'What are the steps to rejoin after a semester break?', 'Which office handles a name correction on my ID card?'];
 
 function home() {
+  const all = allTips(), com = all.filter((t) => t.origin === 'community').length;
+  $('#stats').textContent = `${OFFICIAL.length} handbook entries · ${all.length - com} sample tips · ${com} community tip${com === 1 ? '' : 's'} so far`;
   const pool = allTips().filter((t) => t.kind !== 'opinion');
   const pick = [...pool].sort(() => Math.random() - 0.5).slice(0, 3);
   fill($('#worth'), pick, 'No tips yet.');
@@ -50,6 +53,7 @@ function browse() {
   const tabs = $('#tabs'); tabs.replaceChildren();
   [['all', 'Everything'], ...Object.entries(SHELF)].forEach(([k, label]) => {
     const b = el('button', 'tab' + (k === shelf ? ' on' : ''), label);
+    if (k !== 'all') b.dataset.topic = k;
     b.onclick = () => { shelf = k; browse(); };
     tabs.append(b);
   });

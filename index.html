@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Caveat:wght@500&family=Literata:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/src/styles.css">
+<link rel="stylesheet" href="/src/theme.css">
 </head>
 <body>
 <header class="top">
@@ -21,8 +22,9 @@
 <main>
 <div data-view="home">
   <section class="hero">
-    <h1>The things nobody told you.</h1>
+    <h1>The things <span class="mark">nobody told you</span>.</h1>
     <p>Written down by the students who found out the hard way. Every answer shows what the handbook says, what students report, and what nobody knows yet.</p>
+    <p id="stats" class="stats"></p>
     <form id="hform" class="hsearch"><input id="hq" maxlength="200" aria-label="Your question" placeholder="Ask anything, e.g. What happens if I withdraw from placements?"><button class="primary">Ask</button></form>
   </section>
   <section class="shelves" aria-label="Topics">

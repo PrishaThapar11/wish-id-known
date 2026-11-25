@@ -92,10 +92,12 @@ async function runAsk() {
   const q = $('#q').value.trim();
   if (q.length < 8) return say('#askErr', 'Type a fuller question, at least a few words.');
   const b = $('#askBtn'); b.disabled = true; b.textContent = 'Looking…';
+  const ans = $('#answer'); ans.hidden = false; ans.replaceChildren(Object.assign(document.createElement('p'), { className: 'loading', textContent: 'Going through the handbook and student tips' }));
   try {
     renderAnswer($('#answer'), await ask(q), goAdd);
   } catch (e) {
     console.error(e);
+    $('#answer').hidden = true;
     say('#askErr', navigator.onLine ? `Couldn’t get an answer (${e.code || e.message}).` : 'Asking needs a connection. Adding a tip still works offline.');
   } finally { b.disabled = false; b.textContent = 'Look it up'; }
 }
