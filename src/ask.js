@@ -1,7 +1,8 @@
 import { getGenerativeModel, InferenceMode, Schema } from 'firebase/ai';
 import { ai, loadConfig } from './firebase.js';
 import { rank, ground, setRepeatMin } from './retrieve.js';
-import { allTips } from './pool.js';
+import { allTips, refreshPool } from './pool.js';
+import { OFFICIAL } from './seed.js';
 import { mask } from './shield.js';
 
 const S = Schema;
@@ -37,6 +38,7 @@ const RULES = `You answer a new student's question about Halden University using
 Rules:
 - Every claim must list the ids that support it. Never state anything the sources do not say.
 - Do not add consequences, advice or steps that no source states. If the sources do not say what happens, leave it out and put it in gaps.
+- Use only sources that directly answer the question and ignore the rest. If none do, return verdict unknown with every list empty.
 - official: what the handbook says. repeated: what several different tips agree on (list every supporting tip id). single: something only one or two tips say.
 - conflicts: only when the handbook says one thing and several tips report different practice. Give official_says, students_say and both id lists.
 - Never present a tip as a university rule. Never name any person.
@@ -69,7 +71,15 @@ export async function ask(question) {
   const cfg = await loadConfig();
   setRepeatMin(cfg.repeatMin);
   const clean = mask(question).text;
-  const { tips, official } = rank(clean, allTips(), navigator.onLine ? 12 : 6); // smaller context when offline (on-device)
+  await refreshPool(); // picks up tips other students added since this page loaded
+  let tips, official;
+  if (navigator.onLine) { // the cloud model reads everything and judges relevance itself, so wording differences can't hide a tip
+    const pool = allTips();
+    tips = pool.slice(0, 60).concat(pool.slice(60).slice(-60));
+    official = OFFICIAL;
+  } else { // small on-device context: pre-select the closest matches
+    ({ tips, official } = rank(clean, allTips(), 8));
+  }
   const map = Object.fromEntries([...tips, ...official].map((x) => [x.id, x]));
   if (!tips.length && !official.length) {
     return { r: { verdict: 'unknown', summary: '', official: [], repeated: [], single: [], conflicts: [], gaps: [] }, map, sent: null };

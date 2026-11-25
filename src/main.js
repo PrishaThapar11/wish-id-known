@@ -20,6 +20,18 @@ const SAMPLE = `So I wanted to move from hosteller to day scholar in the middle 
   };
   const [cls, msg] = map[s] || map.unavailable;
   chip.className = 'chip ' + cls; chip.textContent = msg;
+  const dl = $('#dl');
+  if (s === 'downloadable' || s === 'downloading') {
+    dl.hidden = false;
+    dl.onclick = async () => {
+      dl.disabled = true;
+      try {
+        const L = [{ type: 'text', languages: ['en'] }];
+        await LanguageModel.create({ expectedInputs: L, expectedOutputs: L, monitor(mon) { mon.addEventListener('downloadprogress', (e) => { chip.className = 'chip warn'; chip.textContent = `Downloading the on-device model… ${Math.round(e.loaded * 100)}%`; }); } });
+        chip.className = 'chip ok'; chip.textContent = 'On-device AI is ready. Your story stays in this browser.'; dl.hidden = true;
+      } catch (e) { console.warn(e); dl.disabled = false; chip.className = 'chip bad'; chip.textContent = 'The download didn’t finish. Check your connection and try again.'; }
+    };
+  }
 })();
 
 function payload() {
@@ -63,6 +75,7 @@ $('#go').onclick = async () => {
 $('#share').onclick = async () => {
   say('#err2', '');
   const p = payload();
+  if (!navigator.onLine) return say('#err2', 'You’re offline. Cleaning works offline, but sharing needs a connection. Try again when you’re back online.');
   if (p.claim.length < 10) return say('#err2', 'The one-sentence tip is empty or too short.');
   const b = $('#share'); b.disabled = true; b.textContent = 'Sharing…';
   try {
@@ -98,7 +111,7 @@ async function runAsk() {
   } catch (e) {
     console.error(e);
     $('#answer').hidden = true;
-    say('#askErr', navigator.onLine ? `Couldn’t get an answer (${e.code || e.message}).` : 'Asking needs a connection. Adding a tip still works offline.');
+    say('#askErr', navigator.onLine ? (/500|503|429|timeout|timed out|overload|demand/i.test(`${e.code} ${e.message}`) ? 'The AI service is busy right now. Wait a few seconds and try again.' : `Couldn’t get an answer (${e.code || e.message}).`) : 'Asking needs a connection. Adding a tip still works offline.');
   } finally { b.disabled = false; b.textContent = 'Look it up'; }
 }
 $('#askBtn').onclick = runAsk;

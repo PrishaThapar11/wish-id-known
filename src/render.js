@@ -48,7 +48,7 @@ export function renderAnswer(root, { r, map, sent, source, prompt }, onAdd) {
   const m = el('div', 'meta');
   m.append(el('p', null, !sent ? 'Nothing matched, so nothing was sent anywhere.'
     : source === 'device' ? 'Answered on this device by Gemini Nano. Nothing left your browser.'
-    : `Answered by Gemini in the cloud from ${sent.official} handbook entries and ${sent.tips} tips. Your question was cleaned first. No original stories were sent.`));
+    : `Answered by Gemini in the cloud, which read ${sent.official} handbook entries and ${sent.tips} tips. Your question was cleaned first. No original stories were sent.`));
   if (prompt) {
     const d = el('details', 'ev');
     d.append(el('summary', null, source === 'device' ? 'What the on-device model was given' : 'Exactly what was sent'), el('pre', null, prompt));
