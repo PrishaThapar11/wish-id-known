@@ -41,8 +41,12 @@ export function ground(raw, tips, official) {
   const none = { verdict: 'unknown', summary: '', official: [], repeated: [], single: [], conflicts: [], gaps: [] };
   if (raw.verdict === 'unknown') return none;
   const T = new Set(tips.map((x) => x.id)), O = new Set(official.map((x) => x.id));
+  const byId = Object.fromEntries([...tips, ...official].map((x) => [x.id, x]));
+  // A valid id is not enough: most of the claim's content words must appear in the sources it cites.
+  const ratio = (words, have) => { const w = [...new Set(words)]; return w.length ? w.filter((x) => have.has(x)).length / w.length : 0; };
+  const supported = (text, idList) => ratio(tok(text), new Set(idList.flatMap((i) => tok(`${byId[i].title || ''} ${byId[i].text}`)))) >= 0.45;
   const ids = (a, S) => [...new Set((a || []).filter((i) => S.has(i)))];
-  const fix = (arr, S) => (arr || []).map((c) => ({ text: String(c.text || '').trim(), ids: ids(c.ids, S) })).filter((c) => c.text && c.ids.length);
+  const fix = (arr, S) => (arr || []).map((c) => ({ text: String(c.text || '').trim(), ids: ids(c.ids, S) })).filter((c) => c.text && c.ids.length && supported(c.text, c.ids));
   const off = fix(raw.official, O);
   let repeated = fix(raw.repeated, T), single = fix(raw.single, T);
   single = single.concat(repeated.filter((c) => c.ids.length < REPEAT_MIN));
@@ -50,9 +54,11 @@ export function ground(raw, tips, official) {
   const conflicts = (raw.conflicts || []).map((c) => ({
     handbook: String(c.official_says || '').trim(), students: String(c.students_say || '').trim(),
     oids: ids(c.official_ids, O), sids: ids(c.student_ids, T),
-  })).filter((c) => c.handbook && c.students && c.oids.length && c.sids.length >= REPEAT_MIN);
+  })).filter((c) => c.handbook && c.students && c.oids.length && c.sids.length >= REPEAT_MIN && supported(c.handbook, c.oids) && supported(c.students, c.sids));
   const gaps = (raw.gaps || []).map((g) => String(g).trim()).filter((g) => g.includes(' ') && g.length > 15).slice(0, 4);
   const any = off.length || repeated.length || single.length || conflicts.length;
   if (!any) return none;
-  return { verdict: raw.verdict === 'answered' && (off.length || repeated.length) ? 'answered' : 'partial', summary: String(raw.summary || '').trim(), official: off, repeated, single, conflicts, gaps };
+  const claimWords = new Set([...off, ...repeated, ...single].flatMap((c) => tok(c.text)).concat(conflicts.flatMap((c) => tok(`${c.handbook} ${c.students}`))));
+  const summary = ratio(tok(raw.summary || ''), claimWords) >= 0.6 ? String(raw.summary).trim() : ''; // a summary that says more than the claims is dropped
+  return { verdict: raw.verdict === 'answered' && (off.length || repeated.length) ? 'answered' : 'partial', summary, official: off, repeated, single, conflicts, gaps };
 }

@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check';
 import { getAI, GoogleAIBackend } from 'firebase/ai';
 import { getAuth, signInAnonymously } from 'firebase/auth';
-import { getFirestore, addDoc, collection, serverTimestamp, getDocs, query, where, limit, setDoc, doc, getDoc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, addDoc, collection, serverTimestamp, getDocs, query, where, limit, setDoc, doc, getDoc, deleteDoc, writeBatch } from 'firebase/firestore';
 import { getRemoteConfig, fetchAndActivate, getValue } from 'firebase/remote-config';
 
 const env = import.meta.env;
@@ -28,10 +28,13 @@ const db = getFirestore(app);
 
 export async function saveTip(tip) {
   if (!auth.currentUser) await signInAnonymously(auth);
-  // The tip document carries no uid. Auth is only used so the rules can require a signed-in client.
-  const ref = await addDoc(collection(db, 'tips'), { ...tip, status: 'community', createdAt: serverTimestamp() });
-  // Ownership is a separate private record, so the public tip never carries an account id.
-  await setDoc(doc(db, 'tipOwners', ref.id), { uid: auth.currentUser.uid });
+  // One atomic batch: the tip and its private owner record are created together or not at all.
+  // The tip itself never carries an account id. The rules reject an owner record for a tip that already exists.
+  const ref = doc(collection(db, 'tips'));
+  const b = writeBatch(db);
+  b.set(ref, { ...tip, status: 'community', createdAt: serverTimestamp() });
+  b.set(doc(db, 'tipOwners', ref.id), { uid: auth.currentUser.uid });
+  await b.commit();
   return ref;
 }
 

@@ -3,6 +3,7 @@ const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls)
 
 function sources(ids, map) {
   const d = el('details', 'ev');
+  d.open = ids.length === 1; // one source: show the supporting sentence right away
   d.append(el('summary', null, ids.length === 1 ? 'See the source' : `See the ${ids.length} sources`));
   ids.forEach((id) => {
     const it = map[id], p = el('p', 'evi');
@@ -47,7 +48,7 @@ export function renderAnswer(root, { r, map, sent, source, prompt }, onAdd) {
   }
   const m = el('div', 'meta');
   m.append(el('p', null, !sent ? 'Nothing matched, so nothing was sent anywhere.'
-    : source === 'device' ? 'Answered on this device by Gemini Nano. Nothing left your browser.'
+    : source === 'device' ? 'Answered on this device by Gemini Nano, using the tips already loaded in this browser. Nothing left your browser.'
     : `Answered by Gemini in the cloud, which read ${sent.official} handbook entries and ${sent.tips} tips. Your question was cleaned first. No original stories were sent.`));
   if (prompt) {
     const d = el('details', 'ev');

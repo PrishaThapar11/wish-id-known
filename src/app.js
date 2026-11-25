@@ -35,7 +35,7 @@ const UNANS = ['How do I change from hosteller to day scholar?', 'How does hoste
 
 function home() {
   const all = allTips(), com = all.filter((t) => t.origin === 'community').length;
-  $('#stats').textContent = `${OFFICIAL.length} handbook entries · ${all.length - com} sample tips · ${com} community tip${com === 1 ? '' : 's'} so far`;
+  $('#stats').textContent = `Demo dataset for a fictional university: ${OFFICIAL.length} handbook excerpts · ${all.length - com} sample tips · ${com} community tip${com === 1 ? '' : 's'}`;
   const pool = allTips().filter((t) => t.kind !== 'opinion');
   const pick = [...pool].sort(() => Math.random() - 0.5).slice(0, 3);
   fill($('#worth'), pick, 'No tips yet.');

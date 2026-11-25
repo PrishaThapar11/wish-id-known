@@ -35,7 +35,7 @@
     <button class="slip s5" data-shelf="placements"><b>Placements</b><span>Withdrawal, documents, deadlines</span></button>
     <button class="slip s6" data-shelf="campus"><b>Rules nobody printed</b><span>Dress code, facilities, curfews</span></button>
   </section>
-  <section class="sheet"><h2>Worth knowing</h2><p class="small">A few tips, picked fresh each visit.</p><div id="worth" class="list"></div></section>
+  <section class="sheet"><h2>Things I wish I’d known earlier</h2><p class="small">A few tips, picked fresh each visit.</p><div id="worth" class="list"></div></section>
   <section class="sheet"><h2>Still unanswered</h2><p class="lede">Questions students keep asking that nobody has answered reliably. If you’ve been through one, you can fill the gap.</p><div id="unans" class="list"></div></section>
 </div>
 <div data-view="ask" hidden>
@@ -73,6 +73,7 @@
     <button id="dl" class="quiet sm" type="button" hidden>Download the on-device model</button>
 
     <label for="raw">What happened, or what did you figure out?</label>
+    <p class="small warn">Leave out names, room numbers and anything that points to one person. Cleaning removes common identifiers but can’t catch everything, so check the preview before you share.</p>
     <textarea id="raw" rows="7" spellcheck="false" placeholder="e.g. I wanted to switch from hosteller to day scholar mid-year. First I had to…"></textarea>
     <div class="row">
       <button id="go" class="primary">Clean it up on this device</button>
@@ -143,12 +144,15 @@
 <div data-view="how" hidden>
   <section class="sheet how">
     <h2>How it works</h2>
-    <h3>Adding a tip</h3>
-    <p>Your story is read by Gemini Nano, the small model built into Chrome, on your own device. That step is set to on-device only, so if Nano isn’t available it will not quietly send your text to the cloud. Fixed rules remove names, phone numbers, emails and roll numbers before and after the model. You edit and approve a short tip, and only that tip is stored, with no account id.</p>
+    <ol class="steps">
+      <li><b>Write privately</b><span>You write your story. Gemini Nano reads it inside your browser, on-device only, with no cloud fallback.</span></li>
+      <li><b>Review</b><span>You see a short tip and exactly what would be sent. Fixed rules remove common identifiers such as emails, phone numbers, roll numbers, room numbers and names after a title or role. No cleaning is perfect, so you edit and approve.</span></li>
+      <li><b>Share only the tip</b><span>Only the approved tip is stored. It carries no name or account id, and your original story never leaves the device.</span></li>
+    </ol>
     <h3>Asking</h3>
-    <p>Your question and the closest tips go to Gemini through Firebase AI Logic, preferring the cloud. If you’re offline, the same question runs on your device instead, and the answer says which one it was. Every claim has to point at a source or it is dropped. “Heard from several students” needs at least three tips, and a lone story is always labelled as one.</p>
+    <p>Your question and the handbook and tips go to Gemini through Firebase AI Logic, preferring the cloud. Offline, the closest tips already loaded in your browser go to Gemini Nano on your device, and the answer says which one it was. Every claim must cite sources and its wording must match them, or it is dropped. “Heard from several students” needs at least three tips, and a lone story is always labelled as one.</p>
     <h3>What’s real</h3>
-    <p>Halden University is fictional. Handbook entries and tips marked “Sample” are invented for the demo. Tips added through this site appear as “Community tip, unreviewed”. Anonymous sign-in lets you delete your own tips later. The tip itself doesn’t carry your account id. A separate private record links the two, and only that same anonymous account can read or delete it.</p>
+    <p>Halden University is fictional. Handbook excerpts and tips marked “Sample” are invented for the demo. Tips added through this site appear as “Community tip, unreviewed”. Anonymous sign-in lets you delete your own tips later. The tip itself doesn’t carry your account id. A separate private record links the two, and only that same anonymous account can read or delete it.</p>
   </section>
 </div>
 </main>

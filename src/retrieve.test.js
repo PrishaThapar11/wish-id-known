@@ -1,5 +1,6 @@
 import assert from 'node:assert';
 import { rank, ground } from './retrieve.js';
+import { TIPS, OFFICIAL } from './seed.js';
 const ids = (q) => { const r = rank(q); return [...r.official, ...r.tips].map((x) => x.id); };
 assert(ids('what is the attendance requirements').includes('O3'), 'attendance -> O3');
 assert(['T29', 'T30'].every((i) => ids('curfew timings').includes(i)), 'curfew -> gate tips');
@@ -7,7 +8,13 @@ assert(['O1', 'T1'].every((i) => ids('Are there rules about what I can wear in t
 assert(ids('wifi is slow at night').includes('T33'), 'wifi');
 assert(ids('zzz qqq').length === 0, 'gibberish matches nothing');
 const r = rank('Are there rules about what I can wear in the hostel?');
-const g = ground({ verdict: 'answered', summary: 's', official: [{ text: 'x', ids: ['O1', 'ZZ'] }], repeated: [{ text: 'a', ids: ['T1', 'T2', 'T3'] }, { text: 'b', ids: ['T1', 'T2'] }, { text: 'c', ids: ['NOPE'] }], single: [], conflicts: [{ official_says: 'h', students_say: 's', official_ids: ['O1'], student_ids: ['T1', 'T2'] }], gaps: ['gaps_list_1', 'What happens after the third late entry?'] }, r.tips, r.official);
+const g = ground({ verdict: 'answered', summary: 's', official: [{ text: 'Residents must wear decent attire in common areas', ids: ['O1', 'ZZ'] }], repeated: [{ text: 'Students were turned back for wearing shorts or sleeveless tops', ids: ['T1', 'T2', 'T4'] }, { text: 'Students were turned back for wearing shorts', ids: ['T1', 'T2'] }, { text: 'Students were turned back for wearing shorts', ids: ['NOPE'] }], single: [], conflicts: [{ official_says: 'Residents must wear decent attire in common areas', students_say: 'Students were turned back for wearing shorts', official_ids: ['O1'], student_ids: ['T1', 'T2'] }], gaps: ['gaps_list_1', 'What happens after the third late entry?'] }, r.tips, r.official);
 assert(g.repeated.length === 1 && g.single.length === 1 && g.conflicts.length === 0 && g.official[0].ids.length === 1 && g.gaps.length === 1);
 assert(ground({ verdict: 'unknown', official: [{ text: 'x', ids: ['O1'] }] }, r.tips, r.official).verdict === 'unknown', 'model unknown is honoured');
+const over = ground({ verdict: 'answered', summary: 'You will be banned from every placement.', official: [{ text: 'You will be banned from all future placements', ids: ['O4'] }], repeated: [], single: [], conflicts: [], gaps: [] }, TIPS, OFFICIAL);
+assert(over.verdict === 'unknown', 'a claim the cited source does not support is dropped');
+const ok = ground({ verdict: 'answered', summary: 'Withdrawing needs written approval from the Placement Cell.', official: [{ text: 'Withdrawing after accepting an offer needs written approval from the Placement Cell', ids: ['O4'] }], repeated: [], single: [], conflicts: [], gaps: [] }, TIPS, OFFICIAL);
+assert(ok.official.length === 1 && ok.summary, 'a supported claim and its summary are kept');
+const sum = ground({ verdict: 'answered', summary: 'Missing it blocks all registration and ruins your grades forever.', official: [{ text: 'Withdrawing after accepting an offer needs written approval from the Placement Cell', ids: ['O4'] }], repeated: [], single: [], conflicts: [], gaps: [] }, TIPS, OFFICIAL);
+assert(sum.official.length === 1 && sum.summary === '', 'an overreaching summary is dropped');
 console.log('retrieve ok');

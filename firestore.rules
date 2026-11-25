@@ -13,7 +13,10 @@ service cloud.firestore {
         && request.resource.data.topic in ['hostel','academics','professors','paperwork','placements','campus']
         && request.resource.data.kind in ['process','pattern','warning','opinion']
         && request.resource.data.when in ['recent','last_year','older']
-        && request.resource.data.createdAt == request.time;
+        && request.resource.data.createdAt == request.time
+        // the owner record must be written in the same batch, by the same account
+        && existsAfter(/databases/$(db)/documents/tipOwners/$(id))
+        && getAfter(/databases/$(db)/documents/tipOwners/$(id)).data.uid == request.auth.uid;
       allow update: if false;
       // Only the anonymous account that created a tip can delete it (link kept in /tipOwners, not on the tip).
       allow delete: if request.auth != null
@@ -23,7 +26,8 @@ service cloud.firestore {
       allow create: if request.auth != null
         && request.resource.data.keys().hasOnly(['uid'])
         && request.resource.data.uid == request.auth.uid
-        && exists(/databases/$(db)/documents/tips/$(id));
+        && !exists(/databases/$(db)/documents/tips/$(id))
+        && existsAfter(/databases/$(db)/documents/tips/$(id));
       allow read, delete: if request.auth != null && resource.data.uid == request.auth.uid;
       allow update: if false;
     }
