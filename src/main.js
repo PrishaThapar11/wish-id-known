@@ -2,6 +2,7 @@ import { mask } from './shield.js';
 import { nanoStatus, extractTip } from './nano.js';
 import { saveTip } from './firebase.js';
 import { refreshPool } from './pool.js';
+import { substance, overlap } from './retrieve.js';
 import './app.js';
 
 const $ = (s) => document.querySelector(s);
@@ -50,6 +51,7 @@ $('#go').onclick = async () => {
   say('#err', '');
   const raw = $('#raw').value.trim();
   if (raw.length < 40) return say('#err', 'Write a bit more, at least a couple of sentences, so there is a tip to pull out.');
+  if (substance(mask(raw).text) < 8) return say('#err', 'There isn’t enough here to make a tip once personal details are removed. Say what happened and what you did, in a few sentences.');
   const btn = $('#go'); btn.disabled = true; btn.textContent = 'Reading it on this device…';
   const m = mask(raw);
   let fields = { topic: 'campus', kind: 'pattern', claim: '', detail: '' };
@@ -57,7 +59,13 @@ $('#go').onclick = async () => {
   try {
     if ((await nanoStatus()) === 'unavailable') throw new Error('unavailable');
     fields = await extractTip(m.text);
-    note = 'This is what the on-device model pulled out of your story. Edit anything that is wrong or too specific.';
+    if (overlap(`${fields.claim} ${fields.detail}`, m.text) < 0.45) {
+      fields = { ...fields, claim: '', detail: '' };
+      note = 'The on-device model wrote something that doesn’t match your story, so it was discarded. Write the tip yourself below.';
+    } else {
+      note = 'This is what the on-device model pulled out of your story. Edit anything that is wrong or too specific.';
+      if (!/[.!?]$/.test(fields.claim)) { fields.claim = ''; note += ' The one-sentence tip came out incomplete, so it is blank for you to write.'; }
+    }
   } catch (e) {
     console.warn(e);
     if (e.message !== 'unavailable') note = 'The on-device model could not produce a tip this time (see console). Fill it in by hand; nothing was sent to the cloud.';

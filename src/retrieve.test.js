@@ -1,5 +1,6 @@
 import assert from 'node:assert';
-import { rank, ground } from './retrieve.js';
+import { rank, ground, substance, overlap } from './retrieve.js';
+import { mask } from './shield.js';
 import { TIPS, OFFICIAL } from './seed.js';
 const ids = (q) => { const r = rank(q); return [...r.official, ...r.tips].map((x) => x.id); };
 assert(ids('what is the attendance requirements').includes('O3'), 'attendance -> O3');
@@ -17,4 +18,10 @@ const ok = ground({ verdict: 'answered', summary: 'Withdrawing needs written app
 assert(ok.official.length === 1 && ok.summary, 'a supported claim and its summary are kept');
 const sum = ground({ verdict: 'answered', summary: 'Missing it blocks all registration and ruins your grades forever.', official: [{ text: 'Withdrawing after accepting an offer needs written approval from the Placement Cell', ids: ['O4'] }], repeated: [], single: [], conflicts: [], gaps: [] }, TIPS, OFFICIAL);
 assert(sum.official.length === 1 && sum.summary === '', 'an overreaching summary is dropped');
+const thin = mask('My roommate Aisha told me to apply in room 214. Call +91 98765-43210.').text;
+assert(substance(thin) < 8, 'a story with no real content is refused');
+const fake = "To understand the course syllabus and assessment format, find the Professor's office hours are usually held Tuesdays and Thursdays from 10:00 AM to 12:00 PM in [ROOM]. Review the course syllabus on the FFCS website during your first week of classes.";
+assert(overlap(fake, thin) < 0.45, 'an invented tip does not match the story');
+const story = mask('I wanted to move from hosteller to day scholar. The clerk sent me to the warden, who said I need a no-dues from the mess and a written request signed by my parent. Then the Dean office wanted the same letter again with the fee receipt. It took about two weeks.').text;
+assert(substance(story) >= 8 && overlap('Start at the hostel office, then the warden. You need a no-dues from the mess, a written request signed by a parent, and the fee receipt for the Dean office.', story) >= 0.45, 'a faithful tip passes');
 console.log('retrieve ok');

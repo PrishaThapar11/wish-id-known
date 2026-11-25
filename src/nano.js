@@ -17,7 +17,7 @@ Read the story below and write ONE tip a future student could use.
 Rules:
 - Never include the name of any person. Use roles: a warden, a professor, a clerk.
 - Do not judge anyone's character or competence. State what happened or how the process works.
-- Do not invent facts that are not in the story.
+- Do not invent facts that are not in the story. If the story contains no useful tip, return empty strings for claim and detail.
 - claim: one specific sentence, at most 25 words. Name the concrete step, document, office, deadline or number from the story. Never write generic advice like "be proactive" or "gather documents".
 - detail: 1 to 3 sentences with specifics (forms, order of steps, timing, where to go).
 - topic: ${TOPICS.join(' | ')} (professors = courses, FFCS, workload, assessment format only)

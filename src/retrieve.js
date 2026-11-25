@@ -24,6 +24,11 @@ for (const [g, ws] of Object.entries(GROUPS)) ws.split(' ').forEach((w) => { CAN
 const stem = (w) => { for (let i = 0; i < 2; i++) w = w.replace(/(ing|ed|ly|es|s)$/, ''); return w.slice(0, 6); };
 const tok = (s) => (String(s).toLowerCase().match(/[a-z]+/g) || []).filter((w) => w.length > 2 && !STOP.has(w)).map((w) => CANON[w] || stem(w));
 
+// How much real content is left once placeholders like [ROOM] are ignored.
+export const substance = (text) => new Set(tok(String(text).replace(/\[[A-Z]+\]/g, ' '))).size;
+// Share of the output's content words that also appear in the source. Low means the model made things up.
+export const overlap = (output, source) => { const have = new Set(tok(source)); const w = [...new Set(tok(output))]; return w.length ? w.filter((x) => have.has(x)).length / w.length : 0; };
+
 // Offline path only (small on-device context): best matches by IDF-weighted overlap.
 export function rank(question, pool = TIPS, n = 8) {
   const q = [...new Set(tok(mask(question).text))];
