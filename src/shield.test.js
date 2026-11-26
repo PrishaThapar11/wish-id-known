@@ -6,4 +6,6 @@ assert(r.found.EMAIL === 1 && r.found.PHONE === 1 && r.found.REGNO === 1 && r.fo
 const a = mask('My roommate Aisha told me. I live in room 214, block C. Call +91 98765-43210. Friend named Rohan agreed.');
 assert(!/Aisha|Rohan|214|98765/.test(a.text), a.text);
 assert(/roommate/.test(a.text) && /[Ff]riend/.test(a.text), 'roles are kept');
+const e = mask('Write to fees.office@halden.edu, not rahul.k@halden.edu or me@gmail.com or warden.iyer@halden.edu.');
+assert(/fees\.office@halden\.edu/.test(e.text) && !/rahul|gmail|iyer/.test(e.text), e.text);
 console.log('shield ok:', r.text);

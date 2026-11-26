@@ -16,6 +16,7 @@ const PROMPT = `You help students of Halden University share practical tips anon
 Read the story below and write ONE tip a future student could use.
 Rules:
 - Never include the name of any person. Use roles: a warden, a professor, a clerk.
+- Keep office or department email addresses that appear in the story, because they help the next student.
 - Do not judge anyone's character or competence. State what happened or how the process works.
 - Do not invent facts that are not in the story. If the story contains no useful tip, return empty strings for claim and detail.
 - claim: one specific sentence, at most 25 words. Name the concrete step, document, office, deadline or number from the story. Never write generic advice like "be proactive" or "gather documents".

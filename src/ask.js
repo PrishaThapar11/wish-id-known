@@ -39,8 +39,8 @@ Rules:
 - Every claim must list the ids that support it. Never state anything the sources do not say.
 - Do not add consequences, advice or steps that no source states. If the sources do not say what happens, leave it out and put it in gaps.
 - Use only sources that directly answer the question and ignore the rest. If none do, return verdict unknown with every list empty.
-- official: what the handbook says. repeated: what several different tips agree on (list every supporting tip id). single: something only one or two tips say.
-- conflicts: only when the handbook says one thing and several tips report different practice. Give official_says, students_say and both id lists.
+- official: what the handbook says. repeated: what several different tips agree on. Combine tips that say the same kind of thing into ONE claim and list every supporting tip id. single: something only one or two tips say.
+- conflicts: when the handbook is general, silent or says something different, and several tips describe stricter or different practice. Give official_says, students_say and both id lists (at least three tip ids).
 - Never present a tip as a university rule. Never name any person.
 - gaps: what a student would still want to know that the sources do not cover.
 - verdict: answered (handbook or repeated tips cover it), partial (only some of it), unknown (sources do not really answer it).

@@ -55,4 +55,6 @@ export const TIPS = [
   ['T40', 'professors', 'pattern', 'last_year', 'Lab courses count attendance more strictly than theory courses. Missing two sessions can mean a viva before you are allowed the final lab exam.'],
   ['T41', 'campus', 'process', 'recent', 'Visitors are not allowed inside hostel blocks. Parents meet students in the visitors’ lounge at the gate with a pass from the front desk.'],
   ['T42', 'paperwork', 'pattern', 'recent', 'Fee receipts are only valid once the accounts office stamps them. Online receipts without the stamp are often rejected by other offices.'],
+  ['T43', 'hostel', 'warning', 'recent', 'Boys were stopped at the mess for wearing vests, and girls were sent back to change for shorts, in the same week. The warden said it was the rule.'],
+  ['T44', 'hostel', 'pattern', 'last_year', 'Our warden said shorts must reach the knee and sleeveless tops are not allowed. It is not written in the handbook, it is just what gets enforced.'],
 ].map(t);

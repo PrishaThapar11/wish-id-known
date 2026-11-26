@@ -31,7 +31,7 @@ function card(t) {
 }
 const fill = (box, list, empty) => { box.replaceChildren(...(list.length ? list.map(card) : [el('p', 'sheet small', empty)])); };
 
-const UNANS = ['How do I change from hosteller to day scholar?', 'How does hostel leave approval work?', 'What are the steps to rejoin after a semester break?', 'Which office handles a name correction on my ID card?'];
+const UNANS = ['How do I change from hosteller to day scholar?', 'How do I change my hostel room?', 'How do I get a scholarship or fee waiver?', 'Which office handles a name correction on my ID card?'];
 
 function home() {
   const all = allTips(), com = all.filter((t) => t.origin === 'community').length;

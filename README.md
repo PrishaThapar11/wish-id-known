@@ -3,7 +3,7 @@
 **The things nobody told you, written down by the students who found out the hard way.**
 A student-built knowledge base for a fictional university (Halden). Every answer shows what the handbook says, what students report, and what nobody knows yet. Built for #BuildHybridAI 2026 with Firebase AI Logic.
 
-- Live app: [https://wishidknown.web.app](https://wishidknown.web.app)
+- Live app: _add your Firebase Hosting URL_
 - Demo video: _add your YouTube link_
 
 ## The problem
@@ -15,7 +15,7 @@ Universities have an official rulebook and an unofficial one. Which hostel block
 | Add a tip: read the raw story, extract one structured tip | `ONLY_ON_DEVICE` (Gemini Nano in Chrome) | The raw story must never leave the device, so there is deliberately no cloud fallback. If Nano is unavailable the student writes the tip by hand. |
 | Ask: build an evidence-graded answer | `PREFER_IN_CLOUD` (Gemini, falls back to Nano offline) | Cross-tip reasoning is cloud work, but the same question still works offline. The answer says which model produced it. |
 
-Fixed rules (not just the model) remove common identifiers before and after Nano: emails, phone numbers, Aadhaar-style numbers, roll numbers, room numbers, names after a title (Dr, Prof, Warden) and names after a role ("my roommate Aisha"). This is a safety net, not a guarantee: a bare name in an unusual sentence can slip through. That is why the student always edits and approves the tip and can open **Exactly what will leave this device** before sharing. Ask has the same transparency: **Exactly what was sent**.
+Fixed rules (not just the model) remove common identifiers before and after Nano: personal emails (office addresses such as fees.office@halden.edu are kept on purpose, since the next student needs them), phone numbers, Aadhaar-style numbers, roll numbers, room numbers, names after a title (Dr, Prof, Warden) and names after a role ("my roommate Aisha"). This is a safety net, not a guarantee: a bare name in an unusual sentence can slip through. That is why the student always edits and approves the tip and can open **Exactly what will leave this device** before sharing. Ask has the same transparency: **Exactly what was sent**.
 
 ## Answers are graded, not just generated
 Each answer is split into: **From the handbook**, **Heard from several students** (needs 3 or more tips), **One person’s experience** (always labelled unverified), **Handbook vs. what students report**, and **Still unclear**. The model proposes claims with evidence ids; the app checks them. Claims without valid evidence are dropped, and a "repeated" claim backed by fewer than 3 tips is downgraded. If nothing matches, the app says nobody has written it down instead of guessing.
