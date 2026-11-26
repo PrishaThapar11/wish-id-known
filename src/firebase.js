@@ -13,7 +13,7 @@ export const app = initializeApp({
   appId: env.VITE_FIREBASE_APP_ID,
 });
 
-// Local dev: prints a debug token in the console. Register it in Firebase > App Check > Manage debug tokens.
+// Local dev: prints a debug token in the console. 
 if (env.DEV) self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
 if (env.DEV || env.VITE_RECAPTCHA_SITE_KEY) {
   initializeAppCheck(app, {

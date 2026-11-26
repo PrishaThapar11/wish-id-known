@@ -89,3 +89,21 @@ footer{border-top:1px dashed rgba(255,255,255,.2);padding-top:18px}
 .steps li{counter-increment:s;position:relative;background:#f3f1e8;border-top:6px solid var(--yellow);padding:22px 16px 14px;display:flex;flex-direction:column;gap:6px}
 .steps li::before{content:counter(s);position:absolute;top:-17px;left:14px;width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font:700 1rem "Bricolage Grotesque",sans-serif}
 .steps b{font-size:1.1rem}.steps span{font-size:.95rem}
+
+/* header: logo and nav on one line */
+.top{flex-wrap:nowrap;align-items:flex-end;gap:0 24px;padding:10px max(20px,calc((100vw - 1120px)/2)) 0}
+.logo{padding-bottom:10px;font-size:1.9rem}
+.lname{display:flex;flex-direction:column;line-height:1}
+.lname small{margin-top:4px;font:400 .78rem Literata,Georgia,serif;color:#b9c7ce;letter-spacing:.02em}
+#nav{align-self:flex-end;margin-left:auto;flex:none}
+@media(max-width:900px){.top{flex-wrap:wrap}.logo{width:100%}#nav{margin:0;width:100%}}
+
+/* wordmark: the name is the loudest thing in the header */
+.top{padding-top:14px}
+.logo{gap:14px;padding-bottom:12px}
+.logomark{width:56px;height:56px}
+.lname{font:800 clamp(1.8rem,3.2vw,2.6rem)/1 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em;color:var(--ink);background:var(--yellow);padding:7px 16px 8px;border-radius:2px;transform:rotate(-1.2deg);box-shadow:4px 4px 0 rgba(0,0,0,.35);transition:transform .2s}
+.logo:hover .lname{transform:rotate(0) translateY(-2px)}
+.lname small{margin-top:5px;font:600 .8rem Literata,Georgia,serif;color:#5b4b00;letter-spacing:.03em}
+@media(max-width:1180px){.top{flex-wrap:wrap}.logo{width:100%}#nav{margin:0;width:100%}}
+@media(max-width:700px){.lname{font-size:1.75rem}.logomark{width:48px;height:48px}}
