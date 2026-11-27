@@ -13,7 +13,7 @@ export const app = initializeApp({
   appId: env.VITE_FIREBASE_APP_ID,
 });
 
-// Local dev: prints a debug token in the console. 
+// Local dev: prints a debug token in the console. Register it in Firebase > App Check > Manage debug tokens.
 if (env.DEV) self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
 if (env.DEV || env.VITE_RECAPTCHA_SITE_KEY) {
   initializeAppCheck(app, {
@@ -47,10 +47,16 @@ export async function loadCommunity() {
 const rc = getRemoteConfig(app);
 rc.settings.minimumFetchIntervalMillis = env.DEV ? 0 : 3600000;
 rc.defaultConfig = { ask_model: 'gemini-3.5-flash-lite', repeat_min: 3 };
+rc.settings.fetchTimeoutMillis = 4000;
 let cfg;
-export const loadConfig = () => cfg || (cfg = fetchAndActivate(rc).catch((e) => console.warn('Remote Config unavailable, using defaults', e)).then(() => ({
-  model: getValue(rc, 'ask_model').asString(), repeatMin: getValue(rc, 'repeat_min').asNumber() || 3,
-})));
+const readConfig = () => ({ model: getValue(rc, 'ask_model').asString(), repeatMin: getValue(rc, 'repeat_min').asNumber() || 3 });
+export async function loadConfig() {
+  if (cfg) return cfg;
+  if (navigator.onLine) {
+    try { await fetchAndActivate(rc); cfg = readConfig(); return cfg; } catch (e) { console.warn('Remote Config unavailable, using defaults', e); }
+  }
+  return readConfig(); // defaults, or the last values activated
+}
 
 // Tips this browser's anonymous account created. The account persists in this browser until site data is cleared.
 export async function myTips() {

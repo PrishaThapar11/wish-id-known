@@ -1,11 +1,12 @@
 import { mask } from './shield.js';
 import { nanoStatus, extractTip } from './nano.js';
-import { saveTip } from './firebase.js';
+import { saveTip, loadConfig } from './firebase.js';
 import { refreshPool } from './pool.js';
 import { substance, overlap } from './retrieve.js';
 import './app.js';
 
 const $ = (s) => document.querySelector(s);
+loadConfig(); // fetch Remote Config now, while online, so a later offline question never waits for it
 const show = (id, on = true) => { $(id).hidden = !on; };
 const say = (id, msg) => { const el = $(id); el.textContent = msg || ''; el.hidden = !msg; };
 const SAMPLE = `So I wanted to move from hosteller to day scholar in the middle of 3rd year because my parents moved to Bhopal. Nobody in my block knew how. I went to the hostel office first and the clerk sent me to the warden, Mr Sharma, who said I need a no-dues from the mess and a written request signed by my parent. Then the Dean's office wanted the same letter again with the fee receipt. My roll is 23BCE10456 and they kept asking for it. Took me about two weeks, and the mess refund came only after I mailed accounts at fees.office@halden.edu.`;
@@ -21,6 +22,10 @@ const SAMPLE = `So I wanted to move from hosteller to day scholar in the middle 
   };
   const [cls, msg] = map[s] || map.unavailable;
   chip.className = 'chip ' + cls; chip.textContent = msg;
+  if (s === 'available') { // warm up Gemini Nano now, so an offline answer later isn't a cold start
+    const L0 = [{ type: 'text', languages: ['en'] }];
+    LanguageModel.create({ expectedInputs: L0, expectedOutputs: L0 }).then((x) => x.destroy && x.destroy()).catch(() => {});
+  }
   const dl = $('#dl');
   if (s === 'downloadable' || s === 'downloading') {
     dl.hidden = false;
@@ -108,19 +113,27 @@ document.querySelectorAll('[data-q]').forEach((b) => b.addEventListener('click',
   setQ(b.dataset.q);
   if (b.classList.contains('eg')) $('#askBtn').click();
 }));
+function askError(e) {
+  const t = `${e.code} ${e.message}`;
+  if (e.code === 'offline-no-nano') return 'You’re offline, and this browser can’t run the on-device model right now. Reconnect, or use desktop Chrome with the on-device model downloaded.';
+  if (/timeout|timed out/i.test(t)) return navigator.onLine ? 'That took too long. Try again in a moment.' : 'The on-device model took too long to start. Try once more, it is usually faster the second time.';
+  if (/\b(500|503|429)\b|overload|demand/i.test(t)) return 'The AI service is busy right now. Wait a few seconds and try again.';
+  return `Couldn’t get an answer (${e.code || e.message}).`;
+}
 async function runAsk() {
   say('#askErr', '');
   const q = $('#q').value.trim();
   if (q.length < 8) return say('#askErr', 'Type a fuller question, at least a few words.');
   const b = $('#askBtn'); b.disabled = true; b.textContent = 'Looking…';
-  const ans = $('#answer'); ans.hidden = false; ans.replaceChildren(Object.assign(document.createElement('p'), { className: 'loading', textContent: 'Going through the handbook and student tips' }));
+  const ans = $('#answer'); ans.hidden = false; ans.replaceChildren(Object.assign(document.createElement('p'), { className: 'loading', textContent: navigator.onLine ? 'Going through the handbook and student tips' : 'You’re offline, so Gemini Nano is answering on this device. This can take a little while' }));
+  const slow = setTimeout(() => { const l = document.querySelector('#answer .loading'); if (l) l.textContent = navigator.onLine ? 'Still working. The AI service is slow right now' : 'Still working on this device. The first on-device answer can take up to a minute'; }, 8000);
   try {
     renderAnswer($('#answer'), await ask(q), goAdd);
   } catch (e) {
     console.error(e);
     $('#answer').hidden = true;
-    say('#askErr', navigator.onLine ? (/500|503|429|timeout|timed out|overload|demand/i.test(`${e.code} ${e.message}`) ? 'The AI service is busy right now. Wait a few seconds and try again.' : `Couldn’t get an answer (${e.code || e.message}).`) : 'Asking needs a connection. Adding a tip still works offline.');
-  } finally { b.disabled = false; b.textContent = 'Look it up'; }
+    say('#askErr', askError(e));
+  } finally { clearTimeout(slow); b.disabled = false; b.textContent = 'Look it up'; }
 }
 $('#askBtn').onclick = runAsk;
 $('#q').addEventListener('keydown', (e) => { if (e.key === 'Enter') runAsk(); });
